@@ -1,6 +1,9 @@
 # Fractal
 Application that makes fractals, classic)
 
+fractals with smooth colors
+I've made funny feature, that changes condition of fractal borders, so they look like leafs, or droplets, and even like a confetti)
+Also in this application I've used multithreading technology
 
 ![a:](https://github.com/Ultraparalon/Fractal/raw/master/screenshots/1.png)
 ![a:](https://github.com/Ultraparalon/Fractal/raw/master/screenshots/2.png)
