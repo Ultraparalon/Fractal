@@ -93,7 +93,7 @@ int				party(double real, double image);
 int				leaf(double real, double image);
 int				petal1(double real, double image);
 int				petal2(double real, double image);
-int				ft_rainbow(int morph, int base_clr);
+int				ft_rainbow(unsigned int morph, int base_clr);
 void			wizard(char *file_name);
 void			rapid_boost(t_map *map);
 int				deal_key(int key, t_input *in);

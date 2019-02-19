@@ -11,6 +11,23 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
+#include <time.h>
+
+static void	vs_fps(t_map *map)
+{
+	static unsigned int frame;
+	static unsigned int fps;
+	static time_t		sec;
+
+	frame++;
+	mlx_string_put(map->mlx, map->window, 200, 5, 0xFFFFFF, ft_itoa(fps));
+	if (sec != time(0))
+	{
+		sec = time(0);
+		fps = frame;
+		frame = 0;
+	}
+}
 
 static void	help(t_map *map)
 {
@@ -33,6 +50,7 @@ static void	help(t_map *map)
 int			ft_loop(t_map *map)
 {
 	process(map);
+	vs_fps(map);
 	if (map->in->help)
 		help(map);
 	else

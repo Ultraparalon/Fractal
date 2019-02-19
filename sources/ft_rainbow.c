@@ -11,73 +11,58 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
+#include <limits.h>
 
-static int	ft_set_colour(int red, int green, int blue)
+static void	ft_power_up(unsigned char *const col, int *const mor)
 {
-	int colour;
-
-	red <<= 16;
-	green <<= 8;
-	colour = red + green + blue;
-	return (colour);
-}
-
-static void	ft_power_up(int *col, int *mor)
-{
-	*col += *mor;
-	if (*col > 255)
+	if ((*mor + *col) > UCHAR_MAX)
 	{
-		*mor = *col - 256;
-		*col = 255;
+		*mor -= (UCHAR_MAX - *col);
+		*col = UCHAR_MAX;
 	}
 	else
+	{
+		*col += *mor;
 		*mor = 0;
+	}
 }
 
-static void	ft_power_down(int *col, int *mor)
+static void	ft_power_down(unsigned char *const col, int *const mor)
 {
-	*col -= *mor;
-	if (*col < 0)
+	if ((*col - *mor) < 0)
 	{
-		*mor = ABS(*col);
+		*mor -= *col;
 		*col = 0;
 	}
 	else
-		*mor = 0;
-}
-
-static int	ft_colour_morph(int colour, int *mor)
-{
-	int red;
-	int green;
-	int blue;
-
-	red = colour >> 16;
-	green = (colour >> 8) & 0xff;
-	blue = colour & 0xff;
-	if (red == 255 && blue)
-		ft_power_down(&blue, mor);
-	else if (red == 255 && green < 255)
-		ft_power_up(&green, mor);
-	else if (green == 255 && red)
-		ft_power_down(&red, mor);
-	else if (green == 255 && blue < 255)
-		ft_power_up(&blue, mor);
-	else if (blue == 255 && green)
-		ft_power_down(&green, mor);
-	else if (blue == 255 && red < 255)
-		ft_power_up(&red, mor);
-	return (ft_set_colour(red, green, blue));
-}
-
-int			ft_rainbow(int morph, int base_clr)
-{
-	if (morph > 1536)
-		morph %= 1536;
-	while (morph > 0)
 	{
-		base_clr = ft_colour_morph(base_clr, &morph);
-		morph--;
+		*col -= *mor;
+		*mor = 0;
 	}
+}
+
+static void	ft_colour_morph(unsigned char *const color, int mor)
+{
+	while (mor > 0)
+	{
+		if (*(color + 2) == UCHAR_MAX && *color)
+			ft_power_down(color, &mor);
+		else if (*(color + 2) == UCHAR_MAX && *(color + 1) < UCHAR_MAX)
+			ft_power_up((color + 1), &mor);
+		else if (*(color + 1) == UCHAR_MAX && *(color + 2))
+			ft_power_down((color + 2), &mor);
+		else if (*(color + 1) == UCHAR_MAX && *color < UCHAR_MAX)
+			ft_power_up(color, &mor);
+		else if (*color == UCHAR_MAX && *(color + 1))
+			ft_power_down((color + 1), &mor);
+		else if (*color == UCHAR_MAX && *(color + 2) < UCHAR_MAX)
+			ft_power_up((color + 2), &mor);
+	}
+}
+
+int			ft_rainbow(unsigned int morph, int base_clr)
+{
+	morph %= 1536;
+	ft_colour_morph((unsigned char *)&base_clr, morph);
 	return (base_clr);
 }
