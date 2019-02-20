@@ -35,8 +35,10 @@ void		*julia(void *p)
 	t_thread	*th;
 	int			y;
 	int			x;
+	int			*addr;
 
 	th = p;
+	addr = th->img->addr + th->miny * W_W;
 	th->fr->cr = th->in->real;
 	th->fr->ci = th->in->imag;
 	y = th->miny;
@@ -45,7 +47,7 @@ void		*julia(void *p)
 		x = -1;
 		while (++x < W_W)
 		{
-			th->img->addr[x + (y << 10)] = jul(th->in, th->fr, x, y);
+			*addr++ = jul(th->in, th->fr, x, y);
 		}
 		y++;
 	}
